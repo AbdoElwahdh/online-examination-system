@@ -19,6 +19,6 @@ This project was developed collaboratively by the following team members:
 [Abdulrahman hegazy](https://github.com/Abdelrahman-Hegazy1)
 [Abdulrahman basheer](https://github.com/AbdoElwahdh)
 [Abdulhameed muhammed](https://github.com/Abdelhamedmohamedamin)
-[Abulhaleem abdulkader]
-[Abdulrahman sabry]
+[Abulhaleem abdulkader](https://github.com/Abdul-Halim01)
+[Abdulrahman sabry](https://github.com/AbdelrahmansabryYoussef)
 [Shehab Ahmed]
