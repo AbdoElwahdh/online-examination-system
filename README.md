@@ -16,8 +16,8 @@ CSS
 Team:
 This project was developed collaboratively by the following team members:
 
-[Contributer 1](https://github.com/Abdelrahman-Hegazy1)
-[Contributor 2](https://github.com/AbdoElwahdh)
+[Abdulrahman hegazy](https://github.com/Abdelrahman-Hegazy1)
+[Abdulrahman basheer](https://github.com/AbdoElwahdh)
 [Contributor 3]
 [Contributor 4]
 [Contributor 5]
