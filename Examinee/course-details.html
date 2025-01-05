@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Details - Online Examination System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="course-details">
+            <h1 id="courseTitle"></h1>
+            <p id="courseDescription" class="course-description"></p>
+            
+            <div class="course-meta">
+                <p>Created by: <span id="creatorName"></span></p>
+                <p>Created at: <span id="createdAt"></span></p>
+            </div>
+            
+            <div class="course-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="examCount">0</div>
+                    <div class="stat-label">Total Exams</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="completedExams">0</div>
+                    <div class="stat-label">Completed Exams</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="averageScore">0%</div>
+                    <div class="stat-label">Average Score</div>
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <a href="index.html" class="back-btn">Back to Courses</a>
+        </div>
+    </div>
+    <script src="course-details.js"></script>
+</body>
+</html>

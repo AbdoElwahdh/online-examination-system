@@ -1,0 +1,121 @@
+
+/* General Styling */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+.sidebar {
+    width: 250px;
+    background: linear-gradient(180deg, #4e73df, #224abe);
+    color: #fff;
+    position: fixed;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+    }
+}
+
+.sidebar h2 {
+    text-align: center;
+    color: #f8f9fc;
+    margin-bottom: 20px;
+}
+
+.sidebar a {
+    color: #f8f9fc;
+    text-decoration: none;
+    padding: 10px 15px;
+    display: block;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.sidebar a:hover {
+    background: #2e59d9;
+}
+
+.dashboard-content {
+    margin-left: 270px;
+    padding: 20px;
+    box-sizing: border-box;
+    width: calc(100% - 270px);
+}
+
+@media (max-width: 768px) {
+    .dashboard-content {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+.dashboard-content h1 {
+    margin-bottom: 20px;
+    color: #343a40;
+}
+
+/* Card and Row Styling */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.card {
+    background: #f8f9fc;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    flex: 1;
+    min-width: 280px;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card h3 {
+    color: #4e73df;
+    margin-bottom: 10px;
+}
+
+.card p {
+    margin-bottom: 15px;
+    color:rgb(255, 196, 0);
+}
+
+.btn {
+    background: #4e73df;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 15px;
+    text-align: center;
+    border-radius: 5px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.btn:hover {
+    background: #2e59d9;
+}
+
+@media (max-width: 576px) {
+    .card {
+        min-width: 100%;
+    }
+}

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Courses Page</title>
+    <style>
+        .course-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 8px;
+            background-color: white;
+        }
+        #coursesContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .error {
+            color: red;
+            padding: 20px;
+            text-align: center;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="debugInfo"></div>
+    <div id="coursesContainer"></div>
+
+    <script>
+        const debugInfo = document.getElementById('debugInfo');
+        const container = document.getElementById('coursesContainer');
+
+        async function loadCourses() {
+            try {
+                container.innerHTML = '<div class="loading">Loading courses...</div>';
+                
+                const response = await fetch('get_courses.php');
+                const text = await response.text();
+                
+                // Log raw response
+                console.log('Raw response:', text);
+                debugInfo.innerHTML = `<pre>Raw response: ${text}</pre>`;
+
+                // Try to parse JSON
+                const data = JSON.parse(text);
+                console.log('Parsed data:', data);
+
+                // Check for error
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Display debug info
+                debugInfo.innerHTML = `
+                    <pre>
+                    Debug Info:
+                    ${JSON.stringify(data.debug, null, 2)}
+                    </pre>
+                `;
+
+                // Clear container
+                container.innerHTML = '';
+
+                // Check if we have courses
+                if (!data.courses || data.courses.length === 0) {
+                    container.innerHTML = '<div class="error">No courses available</div>';
+                    return;
+                }
+
+                // Display courses
+                data.courses.forEach(course => {
+                    const card = document.createElement('div');
+                    card.className = 'course-card';
+                    card.innerHTML = `
+                        <h3>${course.name}</h3>
+                        <p>${course.description}</p>
+                        <small>Created: ${new Date(course.created_at).toLocaleDateString()}</small>
+                    `;
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error('Error:', error);
+                container.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Load courses when page loads
+        document.addEventListener('DOMContentLoaded', loadCourses);
+    </script>
+</body>
+</html>

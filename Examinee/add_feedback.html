@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+        }
+        .open-feedback-btn {
+            background-color: #3b5998;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 20px;
+        }
+        .feedback-popup {
+            display: none;
+            position: fixed;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            width: 400px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        .feedback-popup.active {
+            display: block;
+        }
+        .feedback-popup label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        .feedback-popup select,
+        .feedback-popup textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .feedback-popup textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        .feedback-popup button {
+            background-color: #3b5998;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .close-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <?php
+    include 'config.php';
+    session_start();
+    if (!isset($_SESSION['user_id'])) {
+        
+        die('Please log in first!');
+
+      
+    }
+    
+    ?>
+    <button class="open-feedback-btn" onclick="openFeedbackForm()">Give Feedback</button>
+
+    <div class="feedback-popup" id="feedbackPopup">
+        <span class="close-btn" onclick="closeFeedbackForm()">&times;</span>
+        <h2>Feedback Form</h2>
+        <form id="feedbackForm">
+            <label for="receiver_id">Send feedback to:</label>
+            <select id="receiver_id" name="receiver_type" onchange="showInstructorList()">
+                <option value="1">Admin</option>
+                <option value="2">Instructor</option>
+            </select>
+
+            <div id="instructorList" style="display: none;">
+                <label for="instructor">Select Instructor:</label>
+                <select id="instructor" name="instructor"></select>
+            </div>
+
+            <input type="hidden" name="receiver_id" value="1">
+            <input type="hidden" name="course_id" value="">
+
+            <label for="feedbackText">Your Feedback:</label>
+            <textarea id="feedbackText" name="feedback_text" required></textarea>
+
+            <button href ="dashboard.php" submit">Submit Feedback</button>
+        </form>
+    </div>
+
+    <script>
+        function openFeedbackForm() {
+            document.getElementById('feedbackPopup').classList.add('active');
+        }
+
+        function closeFeedbackForm() {
+            document.getElementById('feedbackPopup').classList.remove('active');
+            document.getElementById('feedbackForm').reset();
+        }
+
+        function showInstructorList() {
+            const receiver_id = document.getElementById('receiver_id').value;
+            const instructorList = document.getElementById('instructorList');
+            
+            // Update hidden receiver_id
+            document.querySelector('input[name="receiver_id"]').value = receiver_id;
+            
+            if (receiver_id == '2') {
+                instructorList.style.display = 'block';
+                fetchInstructors();
+            } else {
+                instructorList.style.display = 'none';
+                document.querySelector('input[name="course_id"]').value = '';
+            }
+        }
+
+        function fetchInstructors() {
+            // For debugging
+            console.log('Fetching instructors...');
+            
+            fetch('get_instructor_name.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'receiver_type=instructor'
+            })
+            .then(response => response.json())
+            .then(data => {
+                // For debugging
+                console.log('Received data:', data);
+                
+                const instructorSelect = document.getElementById('instructor');
+                instructorSelect.innerHTML = '';
+                
+                if (data.instructors && data.instructors.length > 0) {
+                    data.instructors.forEach(instructor => {
+                        const option = document.createElement('option');
+                        option.value = JSON.stringify({
+                            instructor_id: instructor.instructor_id,
+                            course_id: instructor.course_id
+                        });
+                        option.textContent = `${instructor.instructor_name} - ${instructor.course_name}`;
+                        instructorSelect.appendChild(option);
+                    });
+                    updateHiddenFields();
+                } else {
+                    const option = document.createElement('option');
+                    option.value = '';
+                    option.textContent = 'No instructors found';
+                    instructorSelect.appendChild(option);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching instructors:', error);
+            });
+        }
+
+        function updateHiddenFields() {
+            const instructorSelect = document.getElementById('instructor');
+            if (instructorSelect.value) {
+                const selectedValue = JSON.parse(instructorSelect.value);
+                document.querySelector('input[name="receiver_id"]').value = selectedValue.instructor_id;
+                document.querySelector('input[name="course_id"]').value = selectedValue.course_id;
+            }
+        }
+
+        // Add event listeners
+        document.getElementById('instructor').addEventListener('change', updateHiddenFields);
+
+        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            fetch('submit_feedback.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert(data.message);
+                    closeFeedbackForm();
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while submitting feedback');
+            });
+        });
+    </script>
+</body>
+</html> 
